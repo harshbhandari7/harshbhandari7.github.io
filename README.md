@@ -1,1 +1,572 @@
-who reads a readme file
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Harsh Bhandari · Full Stack Engineer</title>
+<meta name="description" content="Harsh Bhandari is a full stack engineer in Bengaluru building web platforms with React and FastAPI, and production-grade AI systems.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,400;12..96,600;12..96,800&family=Figtree:ital,wght@0,400;0,500;0,600;1,400&family=Instrument+Serif:ital@0;1&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root {
+  --font-display: "Bricolage Grotesque", sans-serif;
+  --font-serif: "Instrument Serif", serif;
+  --font-body: "Figtree", -apple-system, sans-serif;
+  --font-mono: "IBM Plex Mono", ui-monospace, monospace;
+  --ease: cubic-bezier(0.22, 1, 0.36, 1);
+}
+[data-theme="dark"] {
+  --bg: #0d0f13;
+  --bg-raise: rgba(255, 255, 255, 0.028);
+  --bg-raise-hover: rgba(255, 255, 255, 0.055);
+  --line: rgba(255, 255, 255, 0.09);
+  --text: #e4e8ee;
+  --text-dim: #99a1ad;
+  --accent: #ffb454;
+  --accent-ink: #17130b;
+  --accent-soft: rgba(255, 180, 84, 0.12);
+  --glow: rgba(255, 180, 84, 0.16);
+  --canvas-node: 255, 180, 84;
+}
+[data-theme="light"] {
+  --bg: #f7f5f0;
+  --bg-raise: rgba(30, 25, 15, 0.035);
+  --bg-raise-hover: rgba(30, 25, 15, 0.065);
+  --line: rgba(30, 25, 15, 0.12);
+  --text: #23272e;
+  --text-dim: #666e79;
+  --accent: #d97c00;
+  --accent-ink: #fff;
+  --accent-soft: rgba(217, 124, 0, 0.11);
+  --glow: rgba(217, 124, 0, 0.14);
+  --canvas-node: 190, 110, 0;
+}
+
+* { margin: 0; padding: 0; box-sizing: border-box; }
+html { scroll-behavior: smooth; }
+body {
+  background: var(--bg);
+  color: var(--text);
+  font-family: var(--font-body);
+  font-size: 16.5px;
+  line-height: 1.7;
+  transition: background 0.4s var(--ease), color 0.4s var(--ease);
+  -webkit-font-smoothing: antialiased;
+}
+::selection { background: var(--accent); color: var(--accent-ink); }
+a { color: inherit; text-decoration: none; }
+a:focus-visible, button:focus-visible { outline: 2px solid var(--accent); outline-offset: 3px; border-radius: 4px; }
+
+/* Ambient constellation, sits behind everything */
+#field {
+  position: fixed; inset: 0; z-index: 0;
+  pointer-events: none;
+}
+
+.shell {
+  position: relative; z-index: 1;
+  max-width: 1180px; margin: 0 auto;
+  padding: 0 32px;
+  display: grid;
+  grid-template-columns: 460px 1fr;
+  gap: 24px;
+}
+
+/* ============ Left column ============ */
+.side {
+  position: sticky; top: 0;
+  height: 100vh;
+  display: flex; flex-direction: column;
+  padding: 88px 48px 56px 0;
+}
+.side h1 {
+  font-family: var(--font-display);
+  font-size: clamp(40px, 4.2vw, 52px);
+  font-weight: 800;
+  line-height: 1.02;
+  letter-spacing: -0.025em;
+}
+.side .role {
+  margin-top: 18px;
+  font-size: 21px;
+  line-height: 1.45;
+}
+.side .role em {
+  font-family: var(--font-serif);
+  font-style: italic;
+  font-size: 1.13em;
+  color: var(--accent);
+}
+.side .pitch {
+  margin-top: 16px;
+  color: var(--text-dim);
+  max-width: 34ch;
+}
+.side-nav { margin-top: 56px; display: none; }
+@media (min-width: 981px) { .side-nav { display: block; } }
+.side-nav a {
+  display: flex; align-items: center; gap: 14px;
+  padding: 9px 0;
+  font-family: var(--font-mono);
+  font-size: 12px;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--text-dim);
+  transition: color 0.25s;
+}
+.side-nav a .bar {
+  width: 28px; height: 1px;
+  background: var(--text-dim);
+  transition: width 0.3s var(--ease), background 0.3s;
+}
+.side-nav a:hover, .side-nav a.active { color: var(--text); }
+.side-nav a:hover .bar, .side-nav a.active .bar { width: 56px; background: var(--accent); }
+
+.side-foot { margin-top: auto; display: flex; align-items: center; gap: 20px; }
+.side-foot a { color: var(--text-dim); transition: color 0.2s, transform 0.2s; display: inline-flex; }
+.side-foot a:hover { color: var(--accent); transform: translateY(-3px); }
+.side-foot svg { width: 25px; height: 25px; }
+.theme-toggle {
+  margin-left: auto;
+  background: none; border: 1px solid var(--line); color: var(--text-dim);
+  width: 40px; height: 40px; border-radius: 50%; cursor: pointer;
+  display: grid; place-items: center;
+  transition: border-color 0.25s, color 0.25s, transform 0.4s var(--ease);
+}
+.theme-toggle:hover { border-color: var(--accent); color: var(--accent); transform: rotate(40deg); }
+.theme-toggle svg { width: 17px; height: 17px; }
+[data-theme="dark"] .icon-sun { display: block; } [data-theme="dark"] .icon-moon { display: none; }
+[data-theme="light"] .icon-sun { display: none; } [data-theme="light"] .icon-moon { display: block; }
+
+/* ============ Right column ============ */
+.content { padding: 88px 0 56px; }
+section { margin-bottom: 110px; scroll-margin-top: 88px; }
+.sec-label {
+  font-family: var(--font-mono);
+  font-size: 12px; letter-spacing: 0.18em; text-transform: uppercase;
+  color: var(--accent);
+  margin-bottom: 26px;
+  display: flex; align-items: center; gap: 14px;
+}
+.sec-label::after { content: ""; height: 1px; flex: 1; max-width: 64px; background: var(--line); }
+
+.prose p { color: var(--text-dim); margin-bottom: 17px; max-width: 62ch; }
+.prose strong { color: var(--text); font-weight: 600; }
+.prose a { color: var(--text); font-weight: 500; border-bottom: 1px solid var(--accent); transition: color 0.2s; }
+.prose a:hover { color: var(--accent); }
+
+/* Featured project */
+.flagship {
+  border: 1px solid var(--line);
+  border-radius: 18px;
+  background: var(--bg-raise);
+  backdrop-filter: blur(6px);
+  padding: 40px 42px;
+  margin-bottom: 20px;
+  position: relative;
+  overflow: hidden;
+  transition: border-color 0.3s, background 0.3s, box-shadow 0.3s;
+}
+.flagship:hover { border-color: var(--accent); background: var(--bg-raise-hover); box-shadow: 0 24px 60px var(--glow); }
+.flagship::before {
+  content: "";
+  position: absolute; top: -120px; right: -120px;
+  width: 300px; height: 300px; border-radius: 50%;
+  background: radial-gradient(circle, var(--accent-soft), transparent 70%);
+  pointer-events: none;
+}
+.flagship .kicker {
+  font-family: var(--font-mono); font-size: 11.5px;
+  letter-spacing: 0.14em; text-transform: uppercase;
+  color: var(--accent);
+  background: var(--accent-soft);
+  border: 1px solid transparent;
+  padding: 5px 13px; border-radius: 999px;
+  display: inline-block; margin-bottom: 20px;
+}
+.flagship h3 {
+  font-family: var(--font-display); font-weight: 800;
+  font-size: clamp(26px, 3vw, 34px); letter-spacing: -0.015em;
+  margin-bottom: 14px;
+}
+.flagship h3 a { transition: color 0.2s; }
+.flagship h3 a:hover { color: var(--accent); }
+.flagship > p { color: var(--text-dim); max-width: 60ch; margin-bottom: 26px; }
+.flagship .facts {
+  display: grid; grid-template-columns: repeat(auto-fit, minmax(190px, 1fr));
+  gap: 12px;
+  margin-bottom: 26px;
+}
+.flagship .facts div {
+  background: var(--bg);
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  padding: 16px 18px;
+  transition: background 0.4s var(--ease), border-color 0.3s;
+}
+.flagship:hover .facts div { border-color: var(--line); }
+.flagship .facts b {
+  display: block; font-family: var(--font-display); font-weight: 600;
+  font-size: 15.5px; color: var(--text); margin-bottom: 3px;
+}
+.flagship .facts span { font-size: 13px; color: var(--text-dim); line-height: 1.5; display: block; }
+.meta-row { display: flex; flex-wrap: wrap; align-items: center; gap: 8px 18px; }
+.meta-row .tech { font-family: var(--font-mono); font-size: 12.5px; color: var(--text-dim); }
+.link-arrow {
+  margin-left: auto;
+  font-weight: 600; font-size: 14.5px; color: var(--text);
+  display: inline-flex; align-items: center; gap: 7px;
+  transition: color 0.2s;
+}
+.link-arrow svg { width: 15px; height: 15px; transition: transform 0.25s var(--ease); }
+.link-arrow:hover { color: var(--accent); }
+.link-arrow:hover svg { transform: translate(3px, -3px); }
+
+/* Project rows */
+.rows { display: flex; flex-direction: column; }
+.row {
+  display: grid; grid-template-columns: 92px 1fr;
+  gap: 26px;
+  padding: 30px 22px;
+  border-radius: 14px;
+  border: 1px solid transparent;
+  transition: background 0.3s, border-color 0.3s, transform 0.3s var(--ease);
+}
+a.row:hover { background: var(--bg-raise-hover); border-color: var(--line); transform: translateX(6px); }
+.row + .row { border-top: 1px solid var(--line); border-radius: 0 0 14px 14px; }
+a.row:hover + .row { border-top-color: transparent; }
+.row .when {
+  font-family: var(--font-mono); font-size: 12.5px; color: var(--text-dim);
+  padding-top: 5px; letter-spacing: 0.04em;
+}
+.row h3 {
+  font-family: var(--font-display); font-weight: 600; font-size: 19px;
+  display: inline-flex; align-items: center; gap: 9px;
+  transition: color 0.2s;
+}
+.row h3 svg { width: 14px; height: 14px; opacity: 0; transform: translate(-4px, 4px); transition: all 0.25s var(--ease); }
+a.row:hover h3 { color: var(--accent); }
+a.row:hover h3 svg { opacity: 1; transform: none; }
+.row p { color: var(--text-dim); font-size: 15px; margin: 8px 0 12px; max-width: 58ch; }
+.row .tech { font-family: var(--font-mono); font-size: 12.5px; color: var(--text-dim); }
+.row .tech i { font-style: normal; color: var(--accent); margin: 0 7px; }
+
+/* Writing */
+.writing-link {
+  display: flex; align-items: center; justify-content: space-between; gap: 26px;
+  border: 1px solid var(--line); border-radius: 18px;
+  background: var(--bg-raise); backdrop-filter: blur(6px);
+  padding: 34px 40px;
+  transition: border-color 0.3s, background 0.3s, box-shadow 0.3s;
+}
+.writing-link:hover { border-color: var(--accent); background: var(--bg-raise-hover); box-shadow: 0 20px 50px var(--glow); }
+.writing-link h3 {
+  font-family: var(--font-display); font-weight: 800; font-size: 24px;
+  margin-bottom: 8px; letter-spacing: -0.01em;
+}
+.writing-link h3 em { font-family: var(--font-serif); font-style: italic; font-weight: 400; color: var(--accent); font-size: 1.08em; }
+.writing-link p { color: var(--text-dim); font-size: 15px; max-width: 46ch; }
+.writing-link .go {
+  flex-shrink: 0;
+  width: 52px; height: 52px; border-radius: 50%;
+  border: 1px solid var(--line);
+  display: grid; place-items: center;
+  color: var(--text);
+  transition: background 0.25s, color 0.25s, border-color 0.25s, transform 0.3s var(--ease);
+}
+.writing-link:hover .go { background: var(--accent); border-color: var(--accent); color: var(--accent-ink); transform: rotate(45deg); }
+.writing-link .go svg { width: 19px; height: 19px; }
+
+/* Contact */
+.contact h2 {
+  font-family: var(--font-display); font-weight: 800;
+  font-size: clamp(32px, 4vw, 46px); letter-spacing: -0.02em;
+  line-height: 1.08; margin-bottom: 18px;
+}
+.contact h2 em { font-family: var(--font-serif); font-style: italic; font-weight: 400; color: var(--accent); }
+.contact p { color: var(--text-dim); max-width: 52ch; margin-bottom: 30px; }
+.btn {
+  display: inline-block;
+  font-family: var(--font-body); font-weight: 600; font-size: 15px;
+  background: var(--accent); color: var(--accent-ink);
+  padding: 14px 28px; border-radius: 999px;
+  transition: transform 0.25s var(--ease), box-shadow 0.25s;
+}
+.btn:hover { transform: translateY(-3px); box-shadow: 0 12px 30px var(--glow); }
+
+.colophon {
+  font-family: var(--font-mono); font-size: 12px; color: var(--text-dim);
+  margin-top: 90px; padding-top: 24px; border-top: 1px solid var(--line);
+}
+
+/* ============ Reveal ============ */
+.reveal { opacity: 0; transform: translateY(24px); transition: opacity 0.8s var(--ease), transform 0.8s var(--ease); }
+.reveal.in { opacity: 1; transform: none; }
+.side .reveal { transition-duration: 0.9s; }
+.d1 { transition-delay: 0.1s; } .d2 { transition-delay: 0.2s; }
+.d3 { transition-delay: 0.3s; } .d4 { transition-delay: 0.45s; }
+
+/* ============ Responsive ============ */
+@media (max-width: 980px) {
+  .shell { grid-template-columns: 1fr; gap: 0; }
+  .side { position: static; height: auto; padding: 72px 0 0; }
+  .side-foot { margin-top: 36px; }
+  .content { padding-top: 72px; }
+  section { margin-bottom: 84px; }
+  .flagship { padding: 30px 26px; }
+  .row { grid-template-columns: 1fr; gap: 4px; padding: 24px 16px; }
+  .writing-link { flex-direction: column; align-items: flex-start; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
+  *, *::before, *::after { animation-duration: 0.01ms !important; transition-duration: 0.01ms !important; }
+  .reveal { opacity: 1; transform: none; }
+  #field { display: none; }
+}
+</style>
+</head>
+<body>
+
+<canvas id="field" aria-hidden="true"></canvas>
+
+<div class="shell">
+
+  <!-- ========== Left / sticky ========== -->
+  <aside class="side">
+    <div>
+      <h1 class="reveal">Harsh<br>Bhandari</h1>
+      <p class="role reveal d1">Full stack engineer building <em>web platforms</em> and, lately, <em>AI systems</em>.</p>
+      <p class="pitch reveal d2">I design, build, and ship products end to end from Bengaluru, India.</p>
+      <nav class="side-nav reveal d3" aria-label="Sections">
+        <a href="#about" class="active"><span class="bar"></span>About</a>
+        <a href="#work"><span class="bar"></span>Selected work</a>
+        <a href="#writing"><span class="bar"></span>Writing</a>
+        <a href="#contact"><span class="bar"></span>Contact</a>
+      </nav>
+    </div>
+    <div class="side-foot reveal d4">
+      <a href="https://github.com/harshbhandari7" target="_blank" rel="noopener" aria-label="GitHub"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 .5A11.5 11.5 0 0 0 .5 12c0 5.08 3.29 9.39 7.86 10.91.58.11.79-.25.79-.56v-2c-3.2.7-3.87-1.54-3.87-1.54-.53-1.33-1.28-1.69-1.28-1.69-1.05-.72.08-.7.08-.7 1.16.08 1.77 1.19 1.77 1.19 1.03 1.77 2.7 1.26 3.36.96.1-.75.4-1.26.73-1.55-2.55-.29-5.23-1.28-5.23-5.68 0-1.26.45-2.28 1.19-3.09-.12-.29-.52-1.46.11-3.05 0 0 .97-.31 3.18 1.18a11.06 11.06 0 0 1 5.79 0c2.2-1.49 3.17-1.18 3.17-1.18.63 1.59.23 2.76.11 3.05.74.81 1.19 1.83 1.19 3.09 0 4.41-2.69 5.38-5.25 5.67.41.36.78 1.05.78 2.13v3.16c0 .31.21.68.8.56A11.5 11.5 0 0 0 23.5 12 11.5 11.5 0 0 0 12 .5z"/></svg></a>
+      <a href="https://www.linkedin.com/in/harshbhandari7/" target="_blank" rel="noopener" aria-label="LinkedIn"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M20.45 20.45h-3.55v-5.57c0-1.33-.03-3.04-1.85-3.04-1.86 0-2.14 1.45-2.14 2.94v5.67H9.35V9h3.41v1.56h.05a3.74 3.74 0 0 1 3.37-1.85c3.6 0 4.27 2.37 4.27 5.46v6.28zM5.34 7.43a2.06 2.06 0 1 1 0-4.12 2.06 2.06 0 0 1 0 4.12zM7.12 20.45H3.56V9h3.56v11.45z"/></svg></a>
+      <a href="https://substack.com/@0harsh1" target="_blank" rel="noopener" aria-label="Substack"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M22.54 8.36H1.46V5.9h21.08v2.46zM1.46 10.76V24L12 18.11 22.54 24V10.76H1.46zM22.54 0H1.46v2.46h21.08V0z"/></svg></a>
+      <button class="theme-toggle" id="themeToggle" aria-label="Toggle light and dark theme">
+        <svg class="icon-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="4"/><path d="M12 2v2m0 16v2M4.9 4.9l1.4 1.4m11.4 11.4 1.4 1.4M2 12h2m16 0h2M4.9 19.1l1.4-1.4m11.4-11.4 1.4-1.4"/></svg>
+        <svg class="icon-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.8A9 9 0 1 1 11.2 3 7 7 0 0 0 21 12.8z"/></svg>
+      </button>
+    </div>
+  </aside>
+
+  <!-- ========== Right / scrolling ========== -->
+  <main class="content">
+
+    <section id="about">
+      <p class="sec-label reveal">About</p>
+      <div class="prose reveal d1">
+        <p>I am a full stack engineer who likes owning things end to end: shaping the API, building the interface, modelling the data, and carrying it through to production. My core stack is <strong>React and TypeScript</strong> on the frontend with <strong>FastAPI and Python</strong> on the backend.</p>
+        <p>Over the last stretch my work has moved toward <strong>applied AI</strong>. I have built a production-style RAG pipeline with hybrid retrieval and automated evaluation, and a benchmarking tool that measures LLMs against each other on quality, latency, and cost. I care less about demos and more about the unglamorous parts that make AI systems trustworthy: evaluation, testing, and observability.</p>
+        <p>Away from the editor, I write about what I am learning on <a href="https://substack.com/@0harsh1" target="_blank" rel="noopener">Substack</a>.</p>
+      </div>
+    </section>
+
+    <section id="work">
+      <p class="sec-label reveal">Selected work</p>
+
+      <article class="flagship reveal d1">
+        <span class="kicker">Latest · Applied AI</span>
+        <h3><a href="https://github.com/harshbhandari7/doc-rag-engine" target="_blank" rel="noopener">Doc-RAG Engine</a></h3>
+        <p>A production-grade RAG pipeline built to answer a question that actually matters: does chunking strategy change retrieval quality? It indexes documents into Qdrant with dense and sparse vectors, fuses results with reciprocal rank fusion, reranks with a cross-encoder, and generates grounded answers through any OpenAI-compatible LLM. Every configuration is measured, not guessed: a 12-run RAGAS evaluation matrix tracked in MLflow, explored through a Streamlit dashboard.</p>
+        <div class="facts">
+          <div><b>Hybrid retrieval</b><span>Dense + sparse vectors fused with RRF, then cross-encoder reranking</span></div>
+          <div><b>Measured, not vibes</b><span>3 chunking strategies × 4 retrieval variants evaluated with RAGAS</span></div>
+          <div><b>Engineered properly</b><span>76 passing tests, MLflow experiment tracking, ruff-clean codebase</span></div>
+        </div>
+        <div class="meta-row">
+          <span class="tech">Python · Qdrant · RAGAS · MLflow · Streamlit</span>
+          <a class="link-arrow" href="https://github.com/harshbhandari7/doc-rag-engine" target="_blank" rel="noopener">View source <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M7 17 17 7M8 7h9v9"/></svg></a>
+        </div>
+      </article>
+
+      <div class="rows">
+        <a class="row reveal d1" href="https://github.com/harshbhandari7/multi-persona-cli-chatbot" target="_blank" rel="noopener">
+          <span class="when">AI</span>
+          <div>
+            <h3>Multi-Persona LLM Benchmarker <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M7 17 17 7M8 7h9v9"/></svg></h3>
+            <p>A chatbot and benchmarking harness with YAML-defined personas, side-by-side comparison of zero-shot, few-shot, and chain-of-thought prompting, and concurrent evaluation of Gemini, GPT, DeepSeek, and Ollama on quality, speed, and cost per response.</p>
+            <span class="tech">Python<i>/</i>LLM APIs<i>/</i>Streaming</span>
+          </div>
+        </a>
+        <a class="row reveal d2" href="https://github.com/harshbhandari7/statio" target="_blank" rel="noopener">
+          <span class="when">Platform</span>
+          <div>
+            <h3>Statio <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M7 17 17 7M8 7h9v9"/></svg></h3>
+            <p>A multi-tenant service status platform in the spirit of StatusPage: real-time health monitoring, uptime analytics with SLA tracking across 24h to 90d windows, incident and maintenance management, and role-based access with JWT auth.</p>
+            <span class="tech">React<i>/</i>TypeScript<i>/</i>FastAPI<i>/</i>PostgreSQL</span>
+          </div>
+        </a>
+        <a class="row reveal d3" href="https://github.com/harshbhandari7/file-vault" target="_blank" rel="noopener">
+          <span class="when">Tooling</span>
+          <div>
+            <h3>File Vault <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M7 17 17 7M8 7h9v9"/></svg></h3>
+            <p>A Django file management application with clean upload, organisation, and retrieval flows, built for efficient handling and storage.</p>
+            <span class="tech">Python<i>/</i>Django</span>
+          </div>
+        </a>
+        <a class="row reveal d4" href="https://github.com/harshbhandari7/scrapped-mf-details" target="_blank" rel="noopener">
+          <span class="when">Data</span>
+          <div>
+            <h3>Mutual Fund Scraper <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M7 17 17 7M8 7h9v9"/></svg></h3>
+            <p>A Python scraper that pulls mutual fund scheme data from Moneycontrol for downstream analysis. Small tool, real utility.</p>
+            <span class="tech">Python<i>/</i>Web scraping</span>
+          </div>
+        </a>
+      </div>
+    </section>
+
+    <section id="writing">
+      <p class="sec-label reveal">Writing</p>
+      <a class="writing-link reveal d1" href="https://substack.com/@0harsh1" target="_blank" rel="noopener">
+        <div>
+          <h3>Learning, <em>in public</em></h3>
+          <p>Notes on the stack, the tooling, and building with AI, written as I figure things out. New posts land on Substack.</p>
+        </div>
+        <span class="go"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M7 17 17 7M8 7h9v9"/></svg></span>
+      </a>
+    </section>
+
+    <section id="contact" class="contact">
+      <p class="sec-label reveal">Contact</p>
+      <h2 class="reveal d1">Let's build something <em>worth shipping.</em></h2>
+      <p class="reveal d2">Whether it is a role, a collaboration, or a question about something I have built, my inbox is open and I reply.</p>
+      <a class="btn reveal d3" href="https://www.linkedin.com/in/harshbhandari7/" target="_blank" rel="noopener">Reach out on LinkedIn</a>
+      <p class="colophon">Designed and built by Harsh Bhandari · Bengaluru, India · <span id="year"></span></p>
+    </section>
+
+  </main>
+</div>
+
+<script>
+// ---------- Theme (dark default, persisted when hosted) ----------
+(function () {
+  var root = document.documentElement;
+  var stored = null;
+  try { stored = localStorage.getItem("theme"); } catch (e) {}
+  if (stored === "light" || stored === "dark") root.setAttribute("data-theme", stored);
+  document.getElementById("themeToggle").addEventListener("click", function () {
+    var next = root.getAttribute("data-theme") === "dark" ? "light" : "dark";
+    root.setAttribute("data-theme", next);
+    try { localStorage.setItem("theme", next); } catch (e) {}
+  });
+})();
+
+// ---------- Ambient constellation ----------
+// Sparse drifting nodes; near the pointer they link up, a quiet nod to vector retrieval.
+(function () {
+  if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+  var c = document.getElementById("field");
+  var ctx = c.getContext("2d");
+  var W, H, nodes = [], mouse = { x: -9999, y: -9999 };
+  var LINK = 130;
+
+  function resize() {
+    W = c.width = window.innerWidth * devicePixelRatio;
+    H = c.height = window.innerHeight * devicePixelRatio;
+    c.style.width = window.innerWidth + "px";
+    c.style.height = window.innerHeight + "px";
+    var count = Math.min(70, Math.floor(window.innerWidth / 22));
+    nodes = [];
+    for (var i = 0; i < count; i++) {
+      nodes.push({
+        x: Math.random() * W, y: Math.random() * H,
+        vx: (Math.random() - 0.5) * 0.18 * devicePixelRatio,
+        vy: (Math.random() - 0.5) * 0.18 * devicePixelRatio,
+        r: (Math.random() * 1.3 + 0.7) * devicePixelRatio
+      });
+    }
+  }
+  window.addEventListener("resize", resize);
+  resize();
+
+  window.addEventListener("pointermove", function (e) {
+    mouse.x = e.clientX * devicePixelRatio;
+    mouse.y = e.clientY * devicePixelRatio;
+  });
+  window.addEventListener("pointerleave", function () { mouse.x = mouse.y = -9999; });
+
+  function rgb() {
+    return getComputedStyle(document.documentElement).getPropertyValue("--canvas-node").trim();
+  }
+
+  var col = rgb();
+  new MutationObserver(function () { col = rgb(); })
+    .observe(document.documentElement, { attributes: true, attributeFilter: ["data-theme"] });
+
+  function frame() {
+    ctx.clearRect(0, 0, W, H);
+    var linkPx = LINK * devicePixelRatio;
+    for (var i = 0; i < nodes.length; i++) {
+      var n = nodes[i];
+      n.x += n.vx; n.y += n.vy;
+      if (n.x < 0 || n.x > W) n.vx *= -1;
+      if (n.y < 0 || n.y > H) n.vy *= -1;
+      ctx.beginPath();
+      ctx.arc(n.x, n.y, n.r, 0, Math.PI * 2);
+      ctx.fillStyle = "rgba(" + col + ", 0.32)";
+      ctx.fill();
+      var dm = Math.hypot(n.x - mouse.x, n.y - mouse.y);
+      if (dm < linkPx * 1.4) {
+        for (var j = i + 1; j < nodes.length; j++) {
+          var m = nodes[j];
+          var d = Math.hypot(n.x - m.x, n.y - m.y);
+          if (d < linkPx) {
+            var a = (1 - d / linkPx) * (1 - Math.min(dm / (linkPx * 1.4), 1)) * 0.35;
+            ctx.beginPath();
+            ctx.moveTo(n.x, n.y); ctx.lineTo(m.x, m.y);
+            ctx.strokeStyle = "rgba(" + col + "," + a + ")";
+            ctx.lineWidth = devicePixelRatio * 0.7;
+            ctx.stroke();
+          }
+        }
+      }
+    }
+    requestAnimationFrame(frame);
+  }
+  requestAnimationFrame(frame);
+})();
+
+// ---------- Scroll reveal ----------
+(function () {
+  var els = document.querySelectorAll(".reveal");
+  if (!("IntersectionObserver" in window)) {
+    els.forEach(function (e) { e.classList.add("in"); });
+    return;
+  }
+  var io = new IntersectionObserver(function (entries) {
+    entries.forEach(function (en) {
+      if (en.isIntersecting) { en.target.classList.add("in"); io.unobserve(en.target); }
+    });
+  }, { threshold: 0.1 });
+  els.forEach(function (e) { io.observe(e); });
+})();
+
+// ---------- Active section in side nav ----------
+(function () {
+  var links = document.querySelectorAll(".side-nav a");
+  var map = {};
+  links.forEach(function (l) { map[l.getAttribute("href").slice(1)] = l; });
+  var io = new IntersectionObserver(function (entries) {
+    entries.forEach(function (en) {
+      if (en.isIntersecting) {
+        links.forEach(function (l) { l.classList.remove("active"); });
+        var l = map[en.target.id];
+        if (l) l.classList.add("active");
+      }
+    });
+  }, { rootMargin: "-35% 0px -55% 0px" });
+  document.querySelectorAll("main section").forEach(function (s) { io.observe(s); });
+})();
+
+document.getElementById("year").textContent = new Date().getFullYear();
+</script>
+</body>
+</html>
